@@ -1,0 +1,8 @@
+# Vorlage für ARCHIV_DIR/users auf dem Docker-Host (NICHT ins Repo!)
+# Format: benutzername:{SCHEMA}hash:::::
+# Ein Eintrag pro Zeile, ein Benutzer = ein IMAP-Postfach.
+# Hash erzeugen:
+#   docker run --rm -it dovecot/dovecot:2.4.5 doveadm pw -s SHA512-CRYPT
+#
+# Formatbeispiel (kein gültiger Hash):
+archiv:{SHA512-CRYPT}$6$abcdefgh$examplehashvaluereplaceme:::::

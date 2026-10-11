@@ -1,0 +1,33 @@
+services:
+  dovecot:
+    build: .
+    image: mail-archiv:2.4.5
+    # Bei jedem Deploy neu bauen, damit Änderungen an conf.d/ aus Git
+    # auch nach "Pull and redeploy" in Portainer ankommen
+    pull_policy: build
+    container_name: mail-archiv
+    restart: unless-stopped
+
+    # Das Image läuft "rootless" als vmail (UID 1000) und lauscht intern
+    # auf 31993 statt 993.
+    ports:
+      - "${IMAPS_PORT:-993}:31993"   # IMAPS - nur im LAN bzw. über VPN
+
+    volumes:
+      # Mail-Daten (Maildir je Benutzer)
+      - vmail-data:/srv/vmail
+      # Verzeichnis auf dem Docker-Host mit users, tls.crt und tls.key.
+      # Absoluter Pfad, damit es auch in Portainer funktioniert.
+      - ${ARCHIV_DIR:-/opt/mail-archiv}:/etc/dovecot/local:ro
+
+    # Root-Dateisystem schreibgeschützt; nur /run und /tmp beschreibbar
+    read_only: true
+    tmpfs:
+      - /run:mode=1777
+      - /tmp:mode=1777
+
+    environment:
+      - TZ=${TZ:-Europe/Vienna}
+
+volumes:
+  vmail-data:

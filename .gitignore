@@ -1,0 +1,6 @@
+# Zugangsdaten und Schlüssel gehören nicht ins (öffentliche) Repo
+users
+*.key
+*.pem
+*.crt
+.env
